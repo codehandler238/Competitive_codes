@@ -1,0 +1,11 @@
+compilation steps-
+1)-preprocssing take place(The preprocessor is a separate program in reality, but it is invoked automatically by the compiler.)
+2)-code is converted into assembly language(intermediate human redable)
+3)-code is then converted into machine code or object code(binary)
+4)-linking(libraries are linked and various other object code segments are linked)
+
+assembler-translate assembly code into machine code
+
+cc test.c
+object code is generated and saved into file name a.out,we can change the file name by
+cc -o file_name test.c
