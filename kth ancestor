@@ -1,0 +1,199 @@
+/*https://www.hackerrank.com/challenges/kth-ancestor*/
+#include <bits/stdc++.h>
+using namespace std;
+#define lli long long int
+#define f(i,a,b) for(i=a;i<b;i++)
+#define si(a) scanf("%d",&a);
+#define slli(a) scanf("%lld",&a);
+#define MOD 100000000007
+#define MAX 100005
+#define PI 3.14159265
+#define LN 19
+#define pb(a) push_back(a)
+#define mp(a,b) make_pair(a,b)
+#define sn struct node
+vector<lli>graph[MAX];
+lli Level[MAX],dp[19][MAX],root,par[MAX];
+void DFS(lli src,lli prv)
+{
+	lli i;
+
+	vector<lli>::iterator it;
+
+	for(i=1;i<LN;i++)
+		dp[i][src]=dp[i-1][dp[i-1][src]];
+
+	for(it=graph[src].begin();it!=graph[src].end();it++)
+	{
+		if(*it != prv)
+		{
+			dp[0][*it]=src;
+			Level[*it]=Level[src]+1;
+			DFS(*it,src);
+		}
+	}
+
+}
+lli get_lca(lli u,lli v)
+{
+	lli i,k,j;
+
+	//cout<<"u v "<<u<<" "<<v<<endl;
+	if(Level[u] > Level[v])
+		swap(u,v);
+
+	lli lg;
+
+	for(lg=0;(1<<lg)<=Level[v];lg++);
+	lg--;
+
+	for(i=lg;i>=0;i--)
+	{
+		if(Level[v]-(1<<i) >= Level[u])
+			v=dp[i][v];
+	}
+	//cout<<"u v "<<u<<" "<<v<<endl;
+	if(u == v)
+		return u;
+
+	for(i=lg;i>=0;i--)
+	{
+		if(dp[i][u]!=-1 && dp[i][u] != dp[i][v])
+		{
+			u=dp[i][u];
+			v=dp[i][v];
+		}
+	}
+	//cout<<"u v "<<u<<" "<<v<<endl;
+	return dp[0][v];
+}
+
+lli get_ancestor(lli x,lli k)
+{
+	if(par[x] == -1 || k > Level[x])//doesnt exist.
+		return -1;
+
+	if(k == Level[x])
+		return root;
+
+	k=Level[x]-k;
+
+	lli lg;
+	//cout<<Level[x]<<endl;
+	for(lg=LN;lg>=0;lg--)
+	{	
+		if(Level[x]-(1<<lg) >= k){
+			//cout<<lg<<endl;
+			x=dp[lg][x];
+		}
+	}
+
+	return x;
+}
+
+void add(lli x,lli y)//x is added to y.
+{
+	lli i;
+	//cout<<"x y "<<x<<" "<<y<<endl;
+	par[x]=y;
+	graph[y].pb(x);
+	Level[x]=Level[y]+1;
+
+	dp[0][x]=y;
+
+	for(i=1;i<LN;i++){
+		dp[i][x]=dp[i-1][dp[i-1][x]];
+		//cout<<"i "<<i<<" "<<dp[i][x]<<endl;
+	}
+}
+
+void del(lli x)
+{
+	lli p=par[x];
+	par[x]=-1;
+
+	for(lli i=0;i<LN;i++)
+		dp[i][x]=-1;
+
+	vector<lli>::iterator it;
+	for(it=graph[p].begin();it!=graph[p].end();it++)
+	{
+		if(*it == x)
+		{
+			graph[p].erase(it);
+			return;
+		}
+	}
+}
+
+int main()
+{
+	lli i,j,k,m,n,t,u,v,q,a,y,x,ans;
+
+	slli(t);
+	while(t--)
+	{
+		slli(n);
+
+		memset(par,-1,sizeof(par));
+
+		f(i,0,n)
+		{
+			slli(u);
+			slli(v);
+
+			if(v!=0)
+			{
+				graph[v].pb(u);
+				par[u]=v;
+			}
+
+			else
+				root=u;
+		}
+
+		memset(dp,-1,sizeof(dp));
+
+		Level[root]=0;
+		par[root]=0;
+		dp[0][root]=1;
+		DFS(root,-1);
+
+		slli(q);
+
+		while(q--)
+		{
+			slli(a);
+			if(a == 0)//x is added to y.
+			{
+				slli(y);
+
+				slli(x);
+
+				add(x,y);
+			}
+			else if(a == 1)//x is deleted.
+			{
+				slli(x);
+
+				del(x);
+			}
+			else//kth ancestor of x is obtained.
+			{
+				slli(x);
+
+				slli(k);
+
+				ans=get_ancestor(x,k);
+
+				if(ans == -1)
+					printf("0\n");
+				else
+					printf("%lld\n",ans);
+			}
+		}
+
+		f(i,0,MAX)
+		graph[i].clear();
+	}
+}
