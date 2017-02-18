@@ -21,6 +21,13 @@ void fun(int arr[],int w,int n)
 	deque<int>dq;
 	dq.clear();
 
+	if(w == 1)
+	{
+		f(i,0,n)
+		cout<<arr[i]<<" ";
+		cout<<endl;
+		return;
+	}
 	f(i,0,w)
 	{
 		if(dq.empty())
