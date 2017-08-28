@@ -657,31 +657,67 @@ void print_leaf(sn *root)
 	print_leaf(root->lchild);
 	print_leaf(root->rchild);
 }
-void print_right(sn *root)
+void printLeaf(sn *root)
 {
-	if(root==NULL || isleaf(root))
-		return;
+    if(root == NULL)
+    return;
+    
+    if(isleaf(root))
+    {
+        cout<<root->data<<" ";
+        return;
+    }
 
-	print_right(root->rchild);
-	cout<<root->data<<" ";
+    printLeaf(root->lchild);
+    printLeaf(root->rchild);
+}
+
+void printLeftBoundary(sn *root)
+{
+    if(root == NULL)
+    return;
+
+    if(root->lchild)
+    {
+        cout<<root->data<<" ";
+        printLeftBoundary(root->lchild);
+    }
+    else if(root->rchild)
+    {
+        cout<<root->data<<" ";
+        printLeftBoundary(root->rchild);
+    }
+}
+
+void printRightBoundary(sn *root)
+{
+    if(root == NULL)
+    return;
+
+    if(root->rchild)
+    {
+        printRightBoundary(root->rchild);
+        cout<<root->data<<" ";
+    }
+    else if(root->lchild)
+    {
+        printRightBoundary(root->lchild);
+        cout<<root->data<<" ";
+    }
 }
 void boundary_nodes(sn *root)
 {
-	
-	sn *tmp=root;cout<<"as";
+    if(root == NULL)
+    return;
 
-	while((tmp != NULL) && !isleaf(tmp))
-		{
-			cout<<tmp->data<<" ";
-			tmp=tmp->lchild;
-		}
-
-		print_leaf(root);
-
-		print_right(root);
-
-		cout<<endl;
+    cout<<root->data<<" ";
+    
+    printLeftBoundary(root->lchild);
+    printLeaf(root->lchild);
+    printLeaf(root->rchild);
+    printRightBoundary(root->rchild);
 }
+
 void reverse_level_order(sn *root)
 {
 	sn *tmp=root,*cur;
@@ -741,27 +777,38 @@ void iterative_postorder(sn *root)
 int main()
 {
 	int i,j,k,m,n,t;
-	sn *root=NULL;
+    sn *root=NULL;
+    /*cout<<"Enter number of nodes in tree\n";
 	cin>>n;
 	f(i,0,n)
 	{
 		cin>>m;
 		root=formation(root,m);
-	}
-		/*root=newNode(1);
+    }*/
+    
+		root=newNode(1);
 		root->lchild=newNode(2);
-		root->lchild->lchild=newNode(4);
-		root->rchild=newNode(3);
-		root->lchild->rchild=newNode(5);
-		root->lchild->lchild->lchild=newNode(7);
-		//root->lchild->rchild=newNode(4);
+		root->lchild->lchild=newNode(3);
+        root->rchild=newNode(4);
+        root->rchild->rchild = newNode(8);
+        root->rchild->rchild->lchild = newNode(9);
+        root->rchild->rchild->lchild->lchild = newNode(10);
+        root->rchild->rchild->lchild->rchild = newNode(11);
+        root->lchild->lchild->rchild = newNode(5);
+        root->lchild->lchild->rchild->lchild = newNode(6);
+        root->lchild->lchild->rchild->lchild->lchild = newNode(7);
+
+		//root->lchild->rchild=newNode(12);
+		//root->lchild->rchild->lchild=newNode(10);
+		//root->lchild->rchild->rchild=newNode(14);
 		//root->lchild->lchild->lchild=newNode(5);
-		//root->lchild->rchild->rchild=newNode(6);*/
-		/*root->rchild=newNode(4);
+		//root->lchild->rchild->rchild=newNode(6);
+        //root->rchild->rchild = newNode(25);
+        /*root->rchild=newNode(4);
 		root->rchild->rchild=newNode(5);
 		root->lchild->lchild->lchild=newNode(6);*/
 		
-	postorder(root);
+	//postorder(root);
 	//levelorder(root);
 	//spiral_levelorder(root);//*******
 	//root_to_leaf(root);
@@ -781,7 +828,7 @@ int main()
 	//	convert_sum_tree(root);
 	//get_ancestors(root);
 	//nodes_at_k_distance(root);
-     //boundary_nodes(root);//********	
+    //boundary_nodes(root);//********	
 	//reverse_level_order(root);
 	//iterative_postorder(root);
 }
