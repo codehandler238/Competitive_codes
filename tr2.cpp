@@ -774,19 +774,46 @@ void iterative_postorder(sn *root)
 		st2.pop();
 	}
 }
+
+void rootToLeafUtil(sn *root, vector<int>v)
+{
+	if(root == NULL)
+	return;
+
+	v.pb(root->data);
+
+	if(isleaf(root))
+	{
+		vector<int>::iterator it;
+		for(it = v.begin();it != v.end();it++)
+		cout<<*it<<" ";
+		cout<<endl;
+		return;
+	}
+
+	rootToLeafUtil(root->lchild, v);
+	rootToLeafUtil(root->rchild, v);
+}
+
+void rootToLeaf(sn *root)
+{
+	vector<int>v;
+	rootToLeafUtil(root, v);
+}
+
 int main()
 {
 	int i,j,k,m,n,t;
     sn *root=NULL;
-    /*cout<<"Enter number of nodes in tree\n";
+    cout<<"Enter number of nodes in tree\n";
 	cin>>n;
 	f(i,0,n)
 	{
 		cin>>m;
 		root=formation(root,m);
-    }*/
+    }
     
-		root=newNode(1);
+		/*root=newNode(1);
 		root->lchild=newNode(2);
 		root->lchild->lchild=newNode(3);
         root->rchild=newNode(4);
@@ -811,7 +838,7 @@ int main()
 	//postorder(root);
 	//levelorder(root);
 	//spiral_levelorder(root);//*******
-	//root_to_leaf(root);
+	//rootToLeaf(root);
 	//inorder_without_recursion(root);//************
 	//check_children_sum(root);
 	//convert_proper_children_sum(root);
